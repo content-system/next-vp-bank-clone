@@ -1,4 +1,4 @@
-export default async function ServicesPage() {
+export default function ServicesPage() {
   return (
     <div>
       <h1>Services</h1>
