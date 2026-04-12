@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { NavClient } from './NavClient'
 
 const menus = [
   { name: 'Home', href: '/' },
@@ -10,14 +11,11 @@ export function Nav() {
   return (
     <nav style={{ display: 'flex', gap: 20, padding: 20, borderBottom: '1px solid #ccc' }}>
       {menus.map((m) => (
-        <Link
-          key={m.href}
-          href={m.href}
-          prefetch={true}
-          style={{ color: 'black' }}
-        >
-          {m.name}
-        </Link>
+        <NavClient key={m.href} href={m.href}>
+          <Link href={m.href} prefetch={true}>
+            {m.name}
+          </Link>
+        </NavClient>
       ))}
     </nav>
   )
