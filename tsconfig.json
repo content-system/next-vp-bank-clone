@@ -23,8 +23,23 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "./*"
+      "@assets/*": [
+        "assets/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@service": [
+        "service/index"
+      ],
+      "@service/*": [
+        "service/*"
+      ],
+      "@resources": [
+        "resources/index"
+      ],
+      "@lib/*": [
+        "lib/*"
       ]
     },
     "target": "ES2015"

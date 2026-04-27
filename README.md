@@ -36,3 +36,79 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Architecture
+
+### Architecture
+
+![Architecture](https://cdn-images-1.medium.com/max/800/1*JDYTlK00yg0IlUjZ9-sp7Q.png)
+
+Typing:
+- onecore: standard interfaces/types, no implementation
+
+Utilities:
+- locale: (locale-service) contain 123 languages and 210 locales, include date format, decimal separator, number group separator, currency code, currency decimal separator... 
+- logging: (logger-core) used for structure log, support 7 log level: trace, debug, info, warn, error, panic, fatal
+- data validation: (validation-core) high performance, lightweight but feature-rich library for data validation
+  - validate data by schema
+  - support multi-languages
+- web: (web-one) web utilities to
+  - format data (date, number)
+  - build a filter model from URL
+  - Based on schema, build a JSON object from HTML FormData
+ 
+Database:
+- sql-core: standard sql library, which can work with Oracle, Postgres, MySQL, SQL Server, SQLite
+  - CRUDRepository (like CRUDRepository of Spring)
+  - Repository: CRUDRepository + Search Repository
+  - Utilities:
+    - Map data from database column name to JSON object field name
+    - Paging, Sorting: from a raw SQL, build an SQL statement which contains paging and sorting
+    - From data schema, build insert/update/"insert or update" SQL statement
+    
+Plug and Play features:
+- authentication: (authen-service)
+  - Can use with any database design
+  - Has existing SQL Repository
+  - Has existing authentication service
+
+### Status Summary
+- Menu: build dynamic menu based on database. Will customize based on specific requirements
+- Search screen (News, Jobs): solid solution 
+  - Repository: from buildQuery, support to build 
+    - Paging SQL, including sort by JSON field name (Specified SQL for Oracle for faster performance)
+    - Build Count SQL
+  - UI (solid)
+    - Build paging search (in URL)
+    - Build sorting search (in URL)
+- Edit Screen
+  - Repository: solid
+    - CRUD Repository
+    - For specific cases, use utilities to build SQL statement
+      - buildToInsert: build insert SQL statement
+      - buildToUpdate: build update SQL statement
+      - buildToSave: build insert or update SQL statement
+  - Service: solid
+    - Handle transaction (solid)
+      - Begin transaction
+      - Commit transaction
+      - Rollback transaction
+  - UI:
+    - Data validation at server side (validation-core): solid
+      - Validate data by scheme
+      - Support multi-language
+      - Light weight
+      - High performance
+    - Build model from schema: solid
+    - Show error on UI: NOT solid
+    - Flow to handle at UI: NOT solid
+    - Validate data at client side: pending
+
+### Nextjs Guideline
+- app: (standard) routing, just put page.tsx here
+  - [param_name]/page.tsx
+- components: (standard) put custom components here
+- lib: (standard) put common libraries hre, such as db, logger
+- resources: (solid) message resources for localization, date format, number format
+- service: (recommend on internet, not standard)
+- scripts: database script to create schema, data (not source code)
