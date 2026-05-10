@@ -10,14 +10,13 @@ export class ArticleUseCase implements ArticleService {
   search(filter: ArticleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Article>> {
     return this.repository.search(filter, limit, page, fields)
   }
-  load(id: string, userId?: string): Promise<Article | null> {
-    return this.repository.load(id, userId)
+  load(slug: string, userId?: string): Promise<Article | null> {
+    return this.repository.load(slug, userId)
   }
 }
 
 let articleService: ArticleService | undefined
 export function getArticleService(): ArticleService {
-  console.log("enter getArticleService")
   if (!articleService) {
     console.log("create ArticleService")
     const repository = new SqlArticleRepository(db)
